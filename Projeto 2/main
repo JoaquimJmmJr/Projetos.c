@@ -1,0 +1,117 @@
+#include "Radar.cpp" // Inclui o arquivo Radar.cpp
+#include "Cabine.cpp"
+#include <chrono>  // Para std::chrono::seconds e horário
+#include <thread>  // Para std::this_thread::sleep_for
+#include <iostream>
+#include <fstream> // Para manipular arquivos
+#include <ctime>   // Para pegar o horário atual
+#include <cstdlib> // Para gerar números aleatórios
+using namespace std;
+
+// Função para pegar a hora atual no formato [hh:mm:ss]
+string getHoraAtual() {
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char buffer[9];
+    strftime(buffer, 9, "%H:%M:%S", ltm);
+    return string(buffer);
+}
+
+
+// Função para gerar um número aleatório para o voo
+int gerarNumeroDeVoo() {
+    srand(time(0)); // Semente baseada no horário atual
+    return 1000 + (rand() % 9000); // Gera um número entre 1000 e 9999
+}
+
+// Função principal
+int main() {
+    // Nome do arquivo único
+    ofstream arquivo("simulacao_aviao.txt");
+
+    // Verifica se o arquivo foi aberto corretamente
+    if (!arquivo.is_open()) {
+        cerr << "Erro ao abrir o arquivo para escrita!" << endl;
+        return 1;
+    }
+
+    // Configurações iniciais
+    Cabine cabine1("velocidade", "altimetro", "bussola", "radar", "motor", "ailerons", "profundor", "flaps");
+    int numeroVoo = gerarNumeroDeVoo();
+    string piloto = "Tom Cruise"; // Nome fictício do piloto
+    string companhia = "FEI Airlines"; // Nome fictício da companhia
+
+    // Cabeçalho do arquivo
+    arquivo << "Simulação de Voo - Relatório Completo" << endl;
+    arquivo << "-----------------------------------------" << endl;
+    arquivo << "Número do voo: " << numeroVoo << endl;
+    arquivo << "Piloto: " << piloto << endl;
+    arquivo << "Companhia aérea: " << companhia << endl;
+    arquivo << "Início da simulação: " << getHoraAtual() << endl;
+    arquivo << "-----------------------------------------\n" << endl;
+
+    // Etapa 1: Subida
+    arquivo << "================== Fase 1: Subida ==================\n";
+    for (int i = 0; i < 90; i++) {
+        cout << "================== Avião (subida) ==================" << endl;
+        cabine1.atualizarSensoresS();
+        cabine1.atualizarAtuadoresS();
+
+        if(i==0){
+            arquivo << "[" << getHoraAtual() << "] Decolagem iniciada!\n";
+        }
+
+        // Pausa de 1 segundo (descomente se quiser ver pausas)
+         this_thread::sleep_for(chrono::seconds(1));
+    }
+    arquivo << "[" << getHoraAtual() << "] Avião alcançou altitude de cruzeiro.\n\n";
+
+    // Etapa 2: Trajeto
+    arquivo << "================== Fase 2: Trajeto ==================\n";
+    for (int i = 0; i < 50; i++) {
+        cout << "================== Avião (Trajeto) ==================" << endl;
+        cabine1.atualizarSensoresT(i);
+        cabine1.atualizarAtuadoresT(i);
+        if(i==0){
+            arquivo << "[" << getHoraAtual() << "] Trajeto iniciado!\n";
+        }
+        if(i==49){
+            arquivo << "[" << getHoraAtual() << "] Trajeto concluído!\n\n";
+        }
+
+        // Pausa de 1 segundo (descomente se quiser ver pausas)
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+
+    // Etapa 3: Descida
+    arquivo << "================== Fase 3: Descida ==================\n";
+    for (int i = 0; i < 95; i++) {
+        cout << "================== Avião (descida) ==================" << endl;
+        cabine1.atualizarSensoresD();
+        cabine1.atualizarAtuadoresD();
+        if(i==0){
+            arquivo << "[" << getHoraAtual() << "] Iniciou descida!\n";
+        }
+
+        // Pausa de 1 segundo (descomente se quiser ver pausas)
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+    arquivo << "[" << getHoraAtual() << "] Avião pousou com sucesso.\n\n";
+
+    // Relatório Final
+    arquivo << "================== Relatório Final ==================\n";
+    arquivo << "Número do voo: " << numeroVoo << endl;
+    arquivo << "Piloto: " << piloto << endl;
+    arquivo << "Companhia aérea: " << companhia << endl;
+    arquivo << "Duração da simulação: Aproximadamente 4 minutos" << endl;
+    arquivo << "Altitude máxima alcançada: 36000 pés" << endl;
+    arquivo << "Velocidade máxima alcançada: 250 Nós (463 km/h)" << endl;
+    arquivo << "Status final: Avião pousou com segurança." << endl;
+    arquivo << "-----------------------------------------\n";
+
+    // Fechando o arquivo
+    arquivo.close();
+
+    cout << "Simulação concluída. Relatório completo gerado com sucesso!" << endl;
+    return 0;
+}
