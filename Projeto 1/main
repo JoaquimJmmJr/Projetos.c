@@ -1,0 +1,34 @@
+#include <iostream>
+#include <chrono>  // Para std::chrono::seconds
+#include <thread>  // Para std::this_thread::sleep_for
+#include "Sala.cpp"
+using namespace std;
+
+int main() {
+    // Criar três instâncias da sala
+    Sala sala1("temperatura", "luminosidade", "umidade", "ventilador", "lampada", "umidificador", "desumidificador");
+    Sala sala2("temperatura", "luminosidade", "umidade", "ventilador", "lampada", "umidificador", "desumidificador");
+    Sala sala3("temperatura", "luminosidade", "umidade", "ventilador", "lampada", "umidificador", "desumidificador");
+
+    for (int i = 0; i < 1440; i++) {
+        // Atualizar e exibir sensores e atuadores da sala 1
+        cout << "================== Sala 1 ==================" << endl;
+        sala1.atualizarSensores();
+        sala1.atualizarAtuadores();
+
+        // Atualizar e exibir sensores e atuadores da sala 2
+        cout << "================== Sala 2 ==================" << endl;
+        sala2.atualizarSensores2();
+        sala2.atualizarAtuadores();
+
+        // Atualizar e exibir sensores e atuadores da sala 3
+        cout << "================== Sala 3 ==================" << endl;
+        sala3.atualizarSensores3();
+        sala3.atualizarAtuadores3();
+
+        // Pausa de 2 segundos entre cada ciclo
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    return 0;
+}
