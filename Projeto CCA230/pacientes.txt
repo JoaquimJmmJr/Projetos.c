@@ -1,0 +1,4 @@
+5;Chester Bennington;41;556677889;20;07;2017
+3;Freddie Mercury;45;987654321;24;11;1991
+2;Elvis Presley;42;123456789;16;08;1977
+1;Michael Jackson;51;459872431;25;06;2009
